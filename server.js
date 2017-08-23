@@ -1,13 +1,29 @@
 const express = require('express')
 const jsonfile = require('jsonfile')
+const path = require('path')
 /*]
 [|] configure app
 [*/
 const app = express()
+app.use(express.static('./dist'))
 /*]
-[|] configure routes
+[|] (-------------------------)
+[|]    configure post routes
+[|] (-------------------------)
 [*/
-app.post('/get-presidents', (req, res) => {
+
+/*]
+[|] (-------------------------)
+[|]    configure GET routes
+[|] (-------------------------)
+[*/
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname + '/dist/main.html'))
+})
+/*]
+[|] Get presidential data [ Thanks r/datasets! ]
+[*/
+app.get('/get-presidents', (req, res) => {
     /*]
     [|] create filename variable
     [*/
@@ -16,7 +32,11 @@ app.post('/get-presidents', (req, res) => {
     [|] Read the presidents json file in the data folder.
     [*/
     jsonfile.readFile(filename, (err, data) => {
-        res.send(data)
+        if(!err){
+            res.send(data)
+        } else {
+            console.log(err)
+        }
     })
 })
 /*]
