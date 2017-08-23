@@ -9,6 +9,7 @@
   "author": "Alex Wilson",
   "license": "ISC",
   "devDependencies": {
+    "babel-core": "^6.26.0",
     "eslint": "^4.5.0",
     "gulp": "^3.9.1",
     "gulp-babel": "^7.0.0",
@@ -17,6 +18,8 @@
     "gulp-sass": "^3.1.0"
   },
   "dependencies": {
-    "babel-preset-env": "^1.6.0"
+    "babel-preset-env": "^1.6.0",
+    "express": "^4.15.4",
+    "jsonfile": "^3.0.1"
   }
 }
