@@ -1,55 +1,83 @@
 'use strict';
 
 /*]
-[|] This seems to be where we are defining a 'space' for the SVG to exist.
+[|] DEFINE SVG's
 [*/
-var svg = dimple.newSvg('#FirstChartBox', 600, 400);
+var svg1 = dimple.newSvg('#FirstChartBox', 1000, 700);
 /*]
-[|] Now we are using D3 stuff.
+[|] Make HTTP request using D3
 [*/
 d3.json('/get-presidents', function (data) {
-    console.log(data);
-    /*]
-    [|] I want to get first term dates from data set
-    [*/
-    var term_starts = [];
-    data.forEach(function (n) {
-        term_starts.push(n.termStarts);
-    });
-    console.log(term_starts);
     /*]
     [|] This looks like a chart 'declaration'.
     [|] It also looks like we are pumping in the predefined SVG area, AND,
     [|] the freshly recovered json data from the server.
     [*/
-    var prez_chart = new dimple.chart(svg, data);
+    var prez_chart = new dimple.chart(svg1, data);
     /*]
     [|] I don't know what setBounds does.
     [*/
-    prez_chart.setBounds(75, 30, 490, 330);
-    prez_chart.addMeasureAxis('x', 'Hmmm');
-    var y = prez_chart.addCategoryAxis('y', 'aha.');
-    y.addOrderRule('termStart'); // --> I have no idea.
-    prez_chart.addSeries('Channel', dimple.plot.bubble);
+    prez_chart.setBounds(75, 30, 900, 330);
+    /*]
+    [|] 
+    [*/
+    var x = prez_chart.addCategoryAxis('x', 'termStarts');
+    var y = prez_chart.addCategoryAxis('y', 'party');
+    x.ticks = 2;
+    x.fontSize = '14px';
+    prez_chart.addSeries('party', dimple.plot.bubble);
+    /*]
+    [|] Add Legends
+    [*/
     prez_chart.addLegend(180, 10, 360, 20, 'right');
     /*]
     [|] This part I understand.
     [*/
     prez_chart.draw();
-
-    console.log(prez_chart.series);
 });
 /*]
 [E] END
 [*/
-// var svg = dimple.newSvg("#chartContainer", 590, 400);
-// d3.tsv("/data/example_data.tsv", function (data) {
-//   var myChart = new dimple.chart(svg, data);
-//   myChart.setBounds(75, 30, 490, 330)
-//   myChart.addMeasureAxis("x", "Unit Sales");
-//   var y = myChart.addCategoryAxis("y", "Month");
-//   y.addOrderRule("Date");
-//   myChart.addSeries("Channel", dimple.plot.bubble);
-//   myChart.addLegend(180, 10, 360, 20, "right");
-//   myChart.draw();
-// });
+
+/*]
+[|] DEFINE an SVG using dimple.
+[*/
+var svg2 = dimple.newSvg('#PrezBarChartByParty', 700, 700);
+/*]
+[|] Make HTTP request using D3
+[*/
+d3.json('/get-presidents', function (data) {
+    /*]
+    [|] Declare a dimple chart object, using the 
+    [*/
+    var bar_chart = new dimple.chart(svg2, data);
+    /*]
+    [|] Determine where in the SVG the chart will exist.
+    [|] Q: Can two charts exist in a single SVG?
+    [*/
+    bar_chart.setBounds(75, 30, 490, 330);
+    /*]
+    [|] Category axis means that the axis isn't meant to be viewed
+    [|] in a numerical sense. It's titles or names only.
+    [*/
+    bar_chart.addCategoryAxis('x', 'party');
+    /*]
+    [|] make the font more readable
+    [*/
+    bar_chart.addMeasureAxis('y', 'party');
+    /*]
+    [|] Plot the data as a Series (What is a series in dimple, is it like pandas?)
+    [*/
+    bar_chart.addSeries('term', dimple.plot.bar);
+    /*]
+    [|] Decide where to put the legend.
+    [*/
+    bar_chart.addLegend(180, 10, 360, 20, 'right');
+    /*]
+    [|] Draw the damned chart.
+    [*/
+    bar_chart.draw();
+});
+/*]
+[E] END
+[*/
